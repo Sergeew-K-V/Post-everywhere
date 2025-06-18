@@ -1,0 +1,83 @@
+# Cursor Rules for Post-Everywhere Project
+
+## Project Overview
+This is a Next.js 15 project with TypeScript, React 19, and Tailwind CSS 4. The project follows modern React patterns and best practices.
+
+## Code Style & Conventions
+
+### TypeScript
+- Use strict TypeScript configuration
+- Prefer explicit type annotations for function parameters and return types
+- Use interfaces for object shapes, types for unions/primitives
+- Avoid `any` type - use `unknown` or proper typing instead
+- Use path aliases: `@/` points to `./src/`
+
+### React & Next.js
+- Use React 19 features and patterns
+- Prefer functional components with hooks
+- Use Next.js App Router (not Pages Router)
+- Follow Next.js 15 conventions and best practices
+- Use Server Components by default, Client Components when needed
+- Add `"use client"` directive only when necessary
+
+### Component Structure
+- Use PascalCase for component names
+- Place components in `src/app/components/` directory
+- Export components as named exports
+- Use TypeScript interfaces for component props
+- Keep components focused and single-responsibility
+
+### Styling
+- Use Tailwind CSS 4 for styling
+- Follow mobile-first responsive design
+- Use Tailwind's utility classes consistently
+- Avoid custom CSS unless absolutely necessary
+- Use CSS variables for theme values
+
+### File Organization
+- Follow Next.js App Router file structure
+- Use descriptive file names
+- Group related components in subdirectories
+- Keep page components in `src/app/` directory
+
+### Code Quality
+- Write self-documenting code with clear variable names
+- Add JSDoc comments for complex functions
+- Use ESLint and follow Next.js linting rules
+- Keep functions small and focused
+- Use early returns to reduce nesting
+
+### Performance
+- Use Next.js Image component for images
+- Implement proper loading states
+- Use React.memo for expensive components when needed
+- Follow Next.js optimization best practices
+
+### State Management
+- Use React hooks for local state
+- Prefer useState and useEffect for simple state
+- Use Context API for shared state when needed
+- Consider external state management only for complex apps
+
+## AI Assistant Guidelines
+- Suggest modern React patterns and hooks
+- Recommend TypeScript best practices
+- Provide Tailwind CSS solutions
+- Follow Next.js 15 conventions
+- Suggest performance optimizations
+- Help with responsive design
+- Recommend proper error handling
+- Suggest accessibility improvements
+
+## Dependencies
+- Next.js 15.3.3
+- React 19
+- TypeScript 5
+- Tailwind CSS 4
+- ESLint 9
+
+## Development Workflow
+- Use `npm run dev` for development
+- Use `npm run build` for production builds
+- Use `npm run lint` for code linting
+- Use Turbopack for faster development builds 
