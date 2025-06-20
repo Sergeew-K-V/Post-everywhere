@@ -1,38 +1,31 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { logoutUser } from "@/lib/actions";
+import { useLogout } from "@/hooks/mutations/useAuth";
 
 export default function LogoutButton() {
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  const logoutMutation = useLogout();
 
-  const handleLogout = async () => {
-    setIsLoading(true);
-
-    try {
-      const result = await logoutUser();
-
-      if (result.success) {
-        // Перенаправляем на страницу входа после выхода
+  const handleLogout = () => {
+    logoutMutation.mutate(undefined, {
+      onSuccess: () => {
         router.push("/auth/login");
-        router.refresh(); // Обновляем кэш
-      }
-    } catch (error) {
-      console.error("Logout failed:", error);
-    } finally {
-      setIsLoading(false);
-    }
+        router.refresh();
+      },
+      onError: (error: Error) => {
+        console.error("Logout failed:", error);
+      },
+    });
   };
 
   return (
     <button
       onClick={handleLogout}
-      disabled={isLoading}
+      disabled={logoutMutation.isPending}
       className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors disabled:opacity-50"
     >
-      {isLoading ? "Signing out..." : "Sign out"}
+      {logoutMutation.isPending ? "Signing out..." : "Sign out"}
     </button>
   );
 }

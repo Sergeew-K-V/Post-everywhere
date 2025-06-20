@@ -3,11 +3,20 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { loginUser } from "@/lib/actions";
+import { useLogin } from "@/hooks/mutations/useAuth";
 
 interface LoginFormData {
   email: string;
   password: string;
+}
+
+interface ApiError {
+  response?: {
+    data?: {
+      message?: string;
+    };
+  };
+  message?: string;
 }
 
 export default function LoginPage() {
@@ -15,30 +24,21 @@ export default function LoginPage() {
     email: "",
     password: "",
   });
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string>("");
   const router = useRouter();
+  const loginMutation = useLogin();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError("");
 
-    try {
-      const result = await loginUser(formData);
-
-      if (result.success) {
-        // Перенаправляем на dashboard после успешного входа
+    loginMutation.mutate(formData, {
+      onSuccess: () => {
         router.push("/dashboard");
-        router.refresh(); // Обновляем кэш для обновления состояния аутентификации
-      } else {
-        setError(result.error || "Login failed");
-      }
-    } catch {
-      setError("An unexpected error occurred");
-    } finally {
-      setIsLoading(false);
-    }
+        router.refresh();
+      },
+      onError: (error: Error) => {
+        console.error("Login error:", error);
+      },
+    });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,11 +47,6 @@ export default function LoginPage() {
       ...prev,
       [name]: value,
     }));
-
-    // Очищаем ошибку при вводе
-    if (error) {
-      setError("");
-    }
   };
 
   return (
@@ -61,9 +56,13 @@ export default function LoginPage() {
         <p className="text-gray-600">Sign in to your account</p>
       </div>
 
-      {error && (
+      {loginMutation.error && (
         <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-red-600 text-sm">{error}</p>
+          <p className="text-red-600 text-sm">
+            {(loginMutation.error as ApiError)?.response?.data?.message ||
+              (loginMutation.error as Error)?.message ||
+              "Login failed"}
+          </p>
         </div>
       )}
 
@@ -131,10 +130,10 @@ export default function LoginPage() {
 
         <button
           type="submit"
-          disabled={isLoading}
+          disabled={loginMutation.isPending}
           className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {isLoading ? "Signing in..." : "Sign in"}
+          {loginMutation.isPending ? "Signing in..." : "Sign in"}
         </button>
       </form>
 

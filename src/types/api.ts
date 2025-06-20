@@ -1,8 +1,8 @@
 // Common API types
 export interface User {
   id: string;
+  username: string;
   email: string;
-  name: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -13,9 +13,9 @@ export interface LoginCredentials {
 }
 
 export interface RegisterCredentials {
+  username: string;
   email: string;
   password: string;
-  name: string;
 }
 
 export interface AuthResponse {
